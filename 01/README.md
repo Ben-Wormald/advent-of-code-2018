@@ -1,1 +1,0 @@
-`python part_one.py input`
