@@ -35,18 +35,21 @@ for i_log in range(len(logs)):
         stop_min = logs[i_log + 1]['mins']
 
         guards[current_guard]['total'] += stop_min - start_min
-        for i_min in range(start_min, stop_min):
-            guards[current_guard]['mins'][i_min] += 1
+        for minute in range(start_min, stop_min):
+            guards[current_guard]['mins'][minute] += 1
 
     if guards[current_guard]['total'] > max_total:
         max_total = guards[current_guard]['total']
         max_guard = current_guard
 
+max_guard = None
 max_min_count, max_minute = 0, 0
 
-for minute in range(len(guards[max_guard]['mins'])):
-    if guards[max_guard]['mins'][minute] > max_min_count:
-        max_min_count = guards[max_guard]['mins'][minute]
-        max_minute = minute
+for guard in guards:
+    for minute in range(len(guards[guard]['mins'])):
+        if guards[guard]['mins'][minute] > max_min_count:
+            max_guard = guard
+            max_min_count = guards[guard]['mins'][minute]
+            max_minute = minute
 
 print(max_guard * max_minute)
