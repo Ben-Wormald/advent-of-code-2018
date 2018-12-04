@@ -4,10 +4,10 @@ logs = []
 
 with open(sys.argv[1]) as input_file:
     for log in input_file:
+        log_time = log[1:17]
+        minutes_past_midnight = int(log_time.split(':')[1])
+        
         for i_log in range(len(logs) + 1):
-            log_time = log[1:17]
-            minutes_past_midnight = int(log_time.split(':')[1])
-
             if i_log >= len(logs) or log_time < logs[i_log]['time']:
                 logs.insert(i_log, {
                     'time': log_time,
