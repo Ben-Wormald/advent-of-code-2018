@@ -13,7 +13,8 @@ with open(sys.argv[1]) as input_file:
                     'dir': char,
                     'x': len(row),
                     'y': len(grid),
-                    'turn': 'l'
+                    'turn': 'l',
+                    'collision': False
                 })
                 char = '-'
             elif char == 'v' or char == '^':
@@ -22,7 +23,8 @@ with open(sys.argv[1]) as input_file:
                     'dir': char,
                     'x': len(row),
                     'y': len(grid),
-                    'turn': 'l'
+                    'turn': 'l',
+                    'collision': False
                 })
                 char = '|'
                 
@@ -83,19 +85,26 @@ def turn_cart(cart, grid):
             turn_right(cart)
             cart['turn'] = 'l'
 
-collision = False
-
-while not collision:
+while True:
     carts.sort(key=lambda cart: (cart['y'], cart['x']))
     for cart in carts:
+        if cart['collision']:
+            continue
+
         move_cart(cart)
         turn_cart(cart, grid)
 
         for other_cart in carts:
-            if cart['id'] != other_cart['id'] and cart['x'] == other_cart['x'] and cart['y'] == other_cart['y']:
+            if other_cart['collision'] or cart['id'] == other_cart['id']:
+                continue
+
+            if cart['x'] == other_cart['x'] and cart['y'] == other_cart['y']:
+                    cart['collision'] = True
+                    other_cart['collision'] = True
+                    break
+                    
+    if sum(1 for cart in carts if not cart['collision']) == 1:
+        for cart in carts:
+            if not cart['collision']:
                 print(str(cart['x']) + ',' + str(cart['y']))
-                collision = True
-                break
-            
-        if collision:
-            break
+        break
